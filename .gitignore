@@ -5,6 +5,7 @@ __pycache__/
 *.so
 .Python
 env/
+.env
 venv/
 ENV/
 *.egg-info/
@@ -34,4 +35,6 @@ build/
 
 # OS
 Thumbs.db
+
+node_modules/
 

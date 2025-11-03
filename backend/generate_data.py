@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 God Level Coder Challenge - Data Generator
 Generates realistic restaurant data based on Arcca's actual models
@@ -665,7 +664,7 @@ def create_indexes(conn):
 
 def main():
     parser = argparse.ArgumentParser(description='Generate God Level Challenge data')
-    parser.add_argument('--db-url', default='postgresql://challenge:challenge@localhost:5432/challenge_db',
+    parser.add_argument('--db-url', default='postgresql://postgres:sander@localhost:5432/postgres',
                        help='PostgreSQL connection URL')
     parser.add_argument('--stores', type=int, default=50, help='Number of stores')
     parser.add_argument('--products', type=int, default=500, help='Number of products')
