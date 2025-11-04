@@ -1,6 +1,6 @@
 import { QueryResult } from '../types.ts';
 
-const API_URL = '/api/generate-sql';
+const API_URL = '/generate-sql';
 
 export const queryAnalytics = async (query: string): Promise<QueryResult> => {
   try {
