@@ -21,6 +21,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExampleClick }) 
       </h2>
       <p className="mt-4 max-w-2xl mx-auto text-lg text-gray-600">
         Eu sou sua IA de análise de dados. Faça perguntas em linguagem natural para descobrir insights sobre seu restaurante.
+        OBS: Por questões de deploy, populei o banco apenas no mês de novembro!
       </p>
       <div className="mt-10">
         <h3 className="text-md font-semibold text-gray-500 uppercase tracking-wider">Tente uma destas perguntas:</h3>

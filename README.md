@@ -1,79 +1,97 @@
-# 🏆 God Level Coder Challenge
+Nolalytics - God Level Coder Challenge
+Uma plataforma de análise para restaurantes que transforma perguntas em português em dashboards e insights, usando o poder da Inteligência Artificial.
 
-## O Problema
+1. O Problema: A Dor da "Dona Maria"
+A "Dona Maria", dona de restaurante, está sentada em uma montanha de dados (vendas, produtos, canais, clientes), mas não consegue usá-los.
 
-Donos de restaurantes gerenciam operações complexas através de múltiplos canais (presencial, iFood, Rappi, app próprio). Eles têm dados de **vendas, produtos, clientes e operações**, mas não conseguem extrair insights personalizados para tomar decisões de negócio.
+Dashboards Fixos: Não respondem perguntas específicas como: "Qual produto vende mais na quinta à noite no iFood?"
 
-Ferramentas como Power BI são genéricas demais. Dashboards fixos não respondem perguntas específicas. **Como empoderar donos de restaurantes a explorarem seus próprios dados?**
+Ferramentas de BI (Power BI): São complexas demais para quem não tem uma equipe de dados.
 
-## Seu Desafio
+Ela precisa de flexibilidade total com simplicidade total.
 
-Construa uma solução que permita donos de restaurantes **criarem suas próprias análises** sobre seus dados operacionais. Pense: "Power BI para restaurantes" ou "Metabase específico para food service".
+2. A Minha Solução: Analytics por Conversa
+Em vez de tentar adivinhar todos os filtros e gráficos que a Maria poderia querer, minha solução vai direto ao ponto: ela permite que a Maria "pergunte" o que quer saber.
 
-### O que esperamos
+A aplicação usa uma abordagem de Text-to-SQL:
 
-Uma plataforma onde um dono de restaurante possa:
-- Visualizar métricas relevantes (faturamento, produtos mais vendidos, horários de pico)
-- Criar dashboards personalizados sem escrever código
-- Comparar períodos e identificar tendências
-- Extrair valor de dados complexos de forma intuitiva
+O usuário digita uma pergunta em português (ex: "Qual o faturamento total por canal?").
 
-### O que você recebe
+O Back-end (Python + Gemini AI) traduz essa pergunta em uma consulta SQL segura e otimizada.
 
-- Script para geração de **500.000 vendas** de 6 meses (50 lojas, múltiplos canais)
-- Schema PostgreSQL com dados realistas de operação
-- Liberdade total de tecnologias e arquitetura
-- Liberdade total no uso de AI e ferramentas de geração de código
+Essa consulta é executada no banco de dados.
 
-### O que você entrega
+O Front-end (React) recebe os dados e renderiza o gráfico (Barra, Pizza, KPI) que a IA recomendou.
 
-1. Uma solução funcionando (deployed ou local) - com frontend e backend adequados ao banco fornecido
-2. Documentação de decisões arquiteturais
-3. Demo em vídeo (5-10 min) explicando sua abordagem - mostrando a solução funcional e deployada / rodando na sua máquina, apresentando-a no nível de detalhes que julgar relevante
-4. Código bem escrito e testável
+3. Decisões Arquiteturais (Os "Porquês")
+Eu projetei esta solução para atender diretamente aos pilares da avaliação:
 
-## 📚 Documentação
+Foco na Qualidade da Solução para o Usuário
+A dor principal da Maria é a flexibilidade. Ela tem perguntas que mudam todo dia. Um dashboard tradicional, por mais bonito que seja, é "disfuncional" e só responde o que foi programado.
 
-| Documento | Descrição |
-|-----------|-----------|
-| [PROBLEMA.md](./PROBLEMA.md) | Contexto detalhado, persona Maria, dores do usuário |
-| [DADOS.md](./DADOS.md) | Schema completo, padrões, volume de dados |
-| [AVALIACAO.md](./AVALIACAO.md) | Como avaliaremos sua solução |
-| [FAQ.md](./FAQ.md) | Perguntas frequentes |
-| [QUICKSTART.md](./QUICKSTART.md) | Tutorial rápido para começar o desafio |
+Minha abordagem de Text-to-SQL resolve isso 100%. Ela não se limita a filtros pré-definidos. Se a pergunta pode ser respondida pelos dados, a IA pode gerar o SQL para ela.
 
-## Avaliação
+Por que não Metabase ou Power BI? Porque eles ainda têm uma curva de aprendizado. A Maria não quer aprender a usar um "query builder" ou "modelar dados". Ela só quer a resposta.
 
-**Não** estamos avaliando se você seguiu instruções específicas.  
-**Sim** estamos avaliando:
-- Pensamento arquitetural e decisões técnicas
-- Qualidade da solução para o problema do usuário
-- Performance e escala
-- UX e usabilidade
-- Metodologia de trabalho e entrega
+Foco na UX e Usabilidade
+O que é mais simples do que uma caixa de chat? Se a Maria sabe usar o WhatsApp, ela sabe usar o Nolalytics. A interface é "invisível": a complexidade de JOINs, GROUP BYs e SUMs é totalmente abstraída pela IA. O usuário simplesmente pergunta e recebe a visualização.
 
+Foco em Performance e Segurança (Escala)
+Executar SQL gerado por IA diretamente no banco é perigoso. Para tornar isso viável para produção, implementei duas "guardrails" principais no back-end Python:
 
-## Prazo
+Guardião de SELECT: A API bloqueia qualquer consulta que não comece com SELECT. Isso impede que a IA (ou um usuário malicioso) tente rodar DROP TABLE, DELETE ou UPDATE, garantindo a integridade dos dados.
 
-Até 03/11/2025 às 23:59.
+Vigia de Timeout (15s): Nenhuma consulta pode demorar mais que 15 segundos. Isso protege o banco de dados contra queries acidentalmente muito pesadas (ex: "vendas por milissegundo do ano todo") e garante que a Maria sempre receba uma resposta rápida ou uma mensagem de erro amigável.
 
-## Submissão
+4. Stack Tecnológico
+Front-end: React (Vite) com TypeScript.
 
-Mande um email para gsilvestre@arcca.io
+Visualização de Dados: Recharts (com componentes dinâmicos para Gráficos de Barra, Linha/Área e Pizza/Donut).
 
-Com:
-- Link do repositório (público ou nos dê acesso)
-- Link do vídeo demo (5-10 min)
-- Link do deploy (opcional mas valorizado)
-- Documento de decisões arquiteturais
+Back-end: Python (Flask) como uma API.
 
-## Suporte
-- 💬 **Discord**: https://discord.gg/pRwmm64Vej
-- 📧 **Email**: gsilvestre@arcca.io
-- 📧 **Telefone**: (11) 93016 - 3509
+IA (O Cérebro): Google Gemini (gemini-2.5-flash), guiado por um SYSTEM_PROMPT robusto que ensina a IA sobre o schema, regras de negócio (ex: "quantos" vs "quanto") e quais gráficos usar.
 
----
+Banco de Dados: PostgreSQL (hospedado no Supabase).
 
-**Não queremos que você adivinhe o que queremos. Queremos ver como VOCÊ resolveria este problema.**
+Hospedagem (Deploy): Vercel (para o Front-end e o Back-end Python como Serverless Functions).
 
-_Nola • 2025_
+5. Como Rodar o Projeto
+Este projeto foi feito para deploy na Vercel com um banco de dados Supabase.
+
+1. Banco de Dados (Supabase)
+Crie um novo projeto no Supabase.
+
+Na seção Database > Connection pooler, copie a string de conexão (em modo "Session").
+
+Vá até o SQL Editor do Supabase, cole o conteúdo do arquivo backend/database-schema.sql e execute-o para criar as tabelas.
+
+No seu terminal local (na pasta backend/), rode o script generate_data.py apontando para o seu banco Supabase para populá-lo com dados:
+
+Bash
+
+# Ative seu venv
+source venv/bin/activate
+
+# Rode o script (pode levar de 5 a 15 min)
+python generate_data.py --db-url "SUA_URL_DE_CONEXAO_DO_SUPABASE_AQUI"
+2. Deploy (Vercel)
+Faça o push do projeto para um repositório no GitHub.
+
+Importe o projeto no Vercel.
+
+Configuração de Build: Configure o Root Directory para ser a pasta frontend.
+
+Arquivos de Configuração: O Vercel usará automaticamente:
+
+vercel.json (na raiz): Para redirecionar /api/generate-sql para a função Python em backend/app.py.
+
+requirements.txt (na raiz): Para instalar as dependências do Python (Flask, psycopg2-binary, etc.).
+
+Variáveis de Ambiente: Adicione as seguintes variáveis no painel do Vercel:
+
+API_KEY: Sua chave da API do Google Gemini.
+
+DATABASE_URL: A string de conexão do Supabase (a mesma que você usou para popular os dados).
+
+Clique em Deploy.

@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "rewrites": [
+      {
+        "source": "/api/generate-sql",
+        "destination": "/backend/app.py"
+      }
+    ]
+  }

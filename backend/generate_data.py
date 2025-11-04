@@ -333,7 +333,7 @@ def generate_sales(conn, stores, channels, products, items, option_groups, custo
         if current_date.date() == promo_day.date():
             day_mult *= 3.0
         
-        daily_sales = int(random.gauss(2700, 400) * day_mult)
+        daily_sales = int(random.gauss(10, 2) * day_mult)
         
         sales_batch = []
         
