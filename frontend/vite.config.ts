@@ -8,6 +8,8 @@ export default defineConfig(({ mode }) => {
       // Diga ao Vite que seu código-fonte está na pasta 'src'
       root: path.resolve(__dirname, 'src'),
       
+      base: './', // <--- ADICIONE ESTA LINHA
+
       server: {
         port: 3000,
         host: '0.0.0.0',
