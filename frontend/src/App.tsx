@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Header } from './components/Header';
 import { QueryInput } from './components/QueryInput';
@@ -18,7 +17,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, isLoading]); // Adicionado isLoading para rolar para baixo quando o spinner aparecer
 
   const handleSendQuery = useCallback(async (query: string) => {
     if (!query.trim() || isLoading) return;
@@ -49,14 +48,16 @@ const App: React.FC = () => {
   }, [isLoading]);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 font-sans">
+    // Usa a cor de fundo da marca
+    <div className="flex flex-col h-screen bg-brand-light font-sans">
       <Header />
       <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
         <div className="max-w-4xl mx-auto">
           {messages.length === 0 ? (
             <WelcomeScreen onExampleClick={handleSendQuery} />
           ) : (
-            <ChatHistory messages={messages} />
+            // Passa o isLoading para o ChatHistory
+            <ChatHistory messages={messages} isLoading={isLoading} />
           )}
            <div ref={chatEndRef} />
         </div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ChatMessage } from '../types.ts';
 import { Visualization } from './Visualization.tsx';
@@ -6,6 +5,7 @@ import { LoadingSpinner } from './LoadingSpinner.tsx';
 
 interface ChatHistoryProps {
   messages: ChatMessage[];
+  isLoading: boolean; // 1. Aceita o prop isLoading
 }
 
 const UserIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
@@ -21,7 +21,7 @@ const AiIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
 );
 
 
-export const ChatHistory: React.FC<ChatHistoryProps> = ({ messages }) => {
+export const ChatHistory: React.FC<ChatHistoryProps> = ({ messages, isLoading }) => {
   return (
     <div className="space-y-6">
       {messages.map((msg, index) => (
@@ -33,11 +33,11 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ messages }) => {
           )}
           <div className={`max-w-2xl w-full ${msg.type === 'user' ? 'order-2' : ''}`}>
             {msg.type === 'user' ? (
-              <div className="bg-brand-secondary text-white p-4 rounded-xl rounded-br-none">
+              <div className="bg-brand-secondary text-white p-4 rounded-xl rounded-br-none shadow-md">
                 <p className="font-medium">{msg.content}</p>
               </div>
             ) : (
-                <div className="bg-white p-4 sm:p-6 rounded-xl rounded-bl-none border border-gray-200 shadow-sm">
+                <div className="bg-white p-4 sm:p-6 rounded-xl rounded-bl-none border border-gray-200 shadow-sm transition-all hover:shadow-lg">
                     <Visualization result={msg.content} />
                 </div>
             )}
@@ -49,6 +49,18 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ messages }) => {
           )}
         </div>
       ))}
+
+      {/* 2. Renderiza o spinner de loading como se fosse uma mensagem da IA */}
+      {isLoading && (
+        <div className="flex items-start gap-4 justify-start animate-pulse">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-brand-primary text-white flex items-center justify-center">
+                <AiIcon className="w-6 h-6"/>
+            </div>
+            <div className="bg-white p-4 sm:p-6 rounded-xl rounded-bl-none border border-gray-200 shadow-sm">
+                <LoadingSpinner />
+            </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { EXAMPLE_PROMPTS } from '../constants.ts';
 
@@ -6,11 +5,20 @@ interface WelcomeScreenProps {
   onExampleClick: (prompt: string) => void;
 }
 
+// Ícone "Wand" (Varinha mágica)
 const WandIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
     <path strokeLinecap="round" strokeLinejoin="round" d="M9.53 16.122a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.475 2.118A2.25 2.25 0 0 1 .5 18.122V15.75a2.25 2.25 0 0 1 2.25-2.25 2.25 2.25 0 0 1 2.25 2.25v.75A2.25 2.25 0 0 1 6 18.75Zm8.51-1.128a3 3 0 0 0-5.78-1.128 2.25 2.25 0 0 1-2.475-2.118 2.25 2.25 0 0 1 2.475-2.118c1.133 0 2.14.61 2.68 1.543a3 3 0 0 0 5.78 1.128 2.25 2.25 0 0 1 2.475 2.118 2.25 2.25 0 0 1-2.475 2.118c-1.133 0-2.14-.61-2.68-1.543Zm-2.68-6.38a3 3 0 0 0-5.78 1.128 2.25 2.25 0 0 1-2.475 2.118A2.25 2.25 0 0 1 3.5 12.122V9.75a2.25 2.25 0 0 1 2.25-2.25 2.25 2.25 0 0 1 2.25 2.25v.75a2.25 2.25 0 0 1-1.5 2.122Zm8.51-1.128a3 3 0 0 0-5.78-1.128 2.25 2.25 0 0 1-2.475-2.118 2.25 2.25 0 0 1 2.475-2.118c1.133 0 2.14.61 2.68 1.543a3 3 0 0 0 5.78 1.128 2.25 2.25 0 0 1 2.475 2.118 2.25 2.25 0 0 1-2.475 2.118c-1.133 0-2.14-.61-2.68-1.543Z" />
   </svg>
 );
+
+// Ícone de seta para os botões
+const ArrowIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" {...props}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+    </svg>
+);
+
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExampleClick }) => {
   return (
@@ -30,9 +38,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onExampleClick }) 
             <button
               key={prompt}
               onClick={() => onExampleClick(prompt)}
-              className="w-full text-left p-4 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 hover:shadow-md transition-all duration-200"
+              className="group w-full text-left p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 hover:shadow-md transition-all duration-200 flex justify-between items-center"
             >
               <p className="font-medium text-brand-primary">{prompt}</p>
+              <ArrowIcon className="w-4 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
           ))}
         </div>

@@ -1,5 +1,8 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: 'Inter', sans-serif;
@@ -27,4 +30,11 @@ body {
 /* Ensure the root div takes full height */
 #root, body, html {
     height: 100%;
+}
+
+/* Adiciona uma transição sutil para todos os elementos */
+* {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
 }
