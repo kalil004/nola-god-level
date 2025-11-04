@@ -16,7 +16,7 @@
   "rewrites": [
     {
       "source": "/api/generate-sql",
-      "destination": "/backend/app.py"
+      "destination": "/app.py"
     },
     {
       "source": "/(.*)",
