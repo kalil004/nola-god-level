@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
-  AreaChart, // Mudou de LineChart
-  Area,      // Mudou de Line
+  AreaChart, 
+  Area, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
@@ -9,6 +9,7 @@ import {
   Legend, 
   ResponsiveContainer 
 } from 'recharts';
+import { ErrorDisplay } from './ErrorDisplay'; // Importe o ErrorDisplay
 
 interface LineChartVizProps {
   data: any[];
@@ -29,13 +30,24 @@ export const LineChartViz: React.FC<LineChartVizProps> = ({ data }) => {
     return <div className="text-center text-gray-500 p-4">Sem dados para exibir.</div>;
   }
 
-  const keys = Object.keys(data[0]).filter(key => key !== 'date');
-  const dateKey = 'date';
+  // --- LÓGICA CORRIGIDA ---
+  const allKeys = Object.keys(data[0]);
+
+  // A 'dateKey' (eixo X) é a chave de 'string' (ex: data_venda, dia, etc.)
+  // Assumimos que a primeira coluna de string é o nosso eixo X.
+  const dateKey = allKeys.find(key => typeof data[0][key] === 'string');
+  
+  // As 'valueKeys' (eixos Y) são TODAS as chaves de 'number'
+  const valueKeys = allKeys.filter(key => typeof data[0][key] === 'number');
+
+  if (!dateKey || valueKeys.length === 0) {
+    return <ErrorDisplay error="Os dados recebidos não têm o formato esperado (pelo menos 1 string/data e 1 número)." />;
+  }
+  // --- FIM DA CORREÇÃO ---
 
   return (
     <div style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
-        {/* Mudou para AreaChart */}
         <AreaChart
           data={data}
           margin={{
@@ -45,9 +57,8 @@ export const LineChartViz: React.FC<LineChartVizProps> = ({ data }) => {
             bottom: 5,
           }}
         >
-          {/* Definindo os gradientes para cada cor */}
           <defs>
-            {keys.map((key, index) => (
+            {valueKeys.map((key, index) => (
               <linearGradient key={key} id={`color_${index}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={colorKeys[index % colorKeys.length]} stopOpacity={0.8}/>
                 <stop offset="95%" stopColor={colorKeys[index % colorKeys.length]} stopOpacity={0.1}/>
@@ -57,7 +68,7 @@ export const LineChartViz: React.FC<LineChartVizProps> = ({ data }) => {
           
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e0e0e0" />
           <XAxis 
-            dataKey={dateKey} 
+            dataKey={dateKey} // Agora usa a chave de string correta
             tick={{ fontSize: 12 }} 
             angle={-20} 
             textAnchor="end" 
@@ -78,15 +89,15 @@ export const LineChartViz: React.FC<LineChartVizProps> = ({ data }) => {
           />
           <Legend wrapperStyle={{fontSize: "14px", paddingTop: '10px'}}/>
           
-          {/* Mapeia para <Area> em vez de <Line> */}
-          {keys.map((key, index) => (
+          {/* Agora mapeia apenas sobre as chaves numéricas */}
+          {valueKeys.map((key, index) => (
             <Area 
                 key={key} 
                 type="monotone" 
-                dataKey={key} 
+                dataKey={key} // Usa a chave numérica correta
                 stroke={colorKeys[index % colorKeys.length]}
                 fillOpacity={1}
-                fill={`url(#color_${index})`} // Usa o gradiente
+                fill={`url(#color_${index})`} 
                 strokeWidth={2}
                 dot={{ r: 3 }}
                 activeDot={{ r: 6 }}

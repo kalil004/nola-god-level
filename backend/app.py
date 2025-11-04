@@ -15,6 +15,9 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)
 
+script_dir = os.path.dirname(__file__)
+schema_path = os.path.join(script_dir, 'database-schema.sql')
+
 # Pega a URL do banco do .env
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:
@@ -22,10 +25,10 @@ if not DATABASE_URL:
 
 # Carrega o schema do banco de dados
 try:
-    with open('database-schema.sql', 'r') as f:
+    with open(schema_path, 'r') as f:
         db_schema = f.read()
 except FileNotFoundError:
-    print("Erro: Arquivo database-schema.sql não encontrado.")
+    print(f"Erro: Arquivo schema não encontrado em {schema_path}")
     db_schema = "SCHEMA_NOT_FOUND"
 
 # Configura a API do Gemini
@@ -79,6 +82,16 @@ Resposta JSON:
   "title": "Faturamento Total (Últimos 30 dias)",
   "description": "Soma de todas as vendas completas nos últimos 30 dias."
 }}
+Exemplo de Linha
+Pergunta: "Mostre o faturamento por dia do último mês"
+Resposta JSON:
+{{
+  "sql": "SELECT TO_CHAR(s.created_at, 'YYYY-MM') AS sale_month, COUNT(s.id) AS number_of_sales FROM sales s WHERE s.sale_status_desc = 'COMPLETED' GROUP BY sale_month ORDER BY sale_month ASC;
+",
+  "visualizationHint": "LINE_CHART",
+  "title": "Faturamento Total (Últimos 30 dias)",
+  "description": "Soma de todas as vendas completas nos últimos 30 dias."
+}}
 Exemplo de Pizza:
 
 Pergunta: "Qual a proporção de vendas por canal?"
@@ -86,8 +99,8 @@ Resposta JSON:
 {{
     "sql": "SELECT c.name, SUM(s.total_amount) as faturamento FROM sales s JOIN channels c ON s.channel_id = c.id WHERE s.sale_status_desc = 'COMPLETED' GROUP BY c.name;",
     "visualizationHint": "PIE_CHART",
-    "title": "Vendas por Canal",
-    "description": "Distribuição percentual do faturamento total por canal de venda."
+    "title": "Número de Vendas Mensal",
+    "description": "Exibe o número total de vendas completas agrupadas por mês ao longo do tempo."
 }}
 """
 
